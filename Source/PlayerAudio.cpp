@@ -2,7 +2,7 @@
 
 PlayerAudio::PlayerAudio()
 {
-    formatManager.registerBasicFormats(); // مسجل صيغ الصوت الأساسية: WAV, MP3, AIFF
+    formatManager.registerBasicFormats();
 }
 
 PlayerAudio::~PlayerAudio()
@@ -60,9 +60,20 @@ void PlayerAudio::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 void PlayerAudio::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     transportSource.getNextAudioBlock(bufferToFill);
+
+    if (loopActive && transportSource.hasStreamFinished())
+    {
+        transportSource.setPosition(0.0);
+        transportSource.start();
+    }
 }
 
 void PlayerAudio::releaseResources()
 {
     transportSource.releaseResources();
+}
+
+void PlayerAudio::setLoop(bool shouldLoop)
+{
+    loopActive = shouldLoop;
 }

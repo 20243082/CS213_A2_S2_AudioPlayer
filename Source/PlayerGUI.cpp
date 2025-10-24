@@ -2,7 +2,6 @@
 
 PlayerGUI::PlayerGUI()
 {
-    // تسجيل الأزرار
     addAndMakeVisible(loadButton);
     addAndMakeVisible(playButton);
     addAndMakeVisible(stopButton);
@@ -11,7 +10,6 @@ PlayerGUI::PlayerGUI()
     addAndMakeVisible(loopButton);
     addAndMakeVisible(volumeSlider);
 
-    // ربط الأحداث
     loadButton.addListener(this);
     playButton.addListener(this);
     stopButton.addListener(this);
@@ -28,7 +26,6 @@ PlayerGUI::~PlayerGUI() {}
 
 void PlayerGUI::resized()
 {
-    // ترتيب الأزرار
     auto area = getLocalBounds().reduced(10);
     auto buttonHeight = 30;
     loadButton.setBounds(area.removeFromTop(buttonHeight));
@@ -97,12 +94,13 @@ void PlayerGUI::buttonClicked(juce::Button* button)
     }
     else if (button == &loopButton)
     {
-        // لاحقاً يمكن إضافة منطق Loop باستخدام Timer أو AudioTransportSource callbacks
+        loopActive = !loopActive;
+        playerAudio.setLoop(loopActive);
     }
 }
 
 void PlayerGUI::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &volumeSlider)
-        playerAudio.setGain((float)slider->getValue());
+        playerAudio.setGain(static_cast<float>(slider->getValue()));
 }

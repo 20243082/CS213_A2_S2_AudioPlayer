@@ -2,10 +2,6 @@
 #include <JuceHeader.h>
 #include "PlayerAudio.h"
 
-// ==================================================
-// PlayerGUI: مسؤول عن واجهة المستخدم (الأزرار، السلايدر)
-// يتواصل مع PlayerAudio فقط لتشغيل الصوت
-// ==================================================
 class PlayerGUI : public juce::Component,
     public juce::Button::Listener,
     public juce::Slider::Listener
@@ -14,17 +10,14 @@ public:
     PlayerGUI();
     ~PlayerGUI() override;
 
-    void resized() override;  // تحديد أماكن الأزرار والسلايدر
-
-    // واجهات تشغيل الصوت
+    void resized() override;
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate);
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
     void releaseResources();
 
 private:
-    PlayerAudio playerAudio; // عنصر الصوت
+    PlayerAudio playerAudio;
 
-    // عناصر الواجهة
     juce::TextButton loadButton{ "Load File" };
     juce::TextButton playButton{ "Play" };
     juce::TextButton stopButton{ "Stop" };
@@ -35,12 +28,12 @@ private:
 
     std::unique_ptr<juce::FileChooser> fileChooser;
 
-    // التعامل مع الأزرار والسلايدر
     void buttonClicked(juce::Button* button) override;
     void sliderValueChanged(juce::Slider* slider) override;
 
     bool isMuted = false;
     float lastGain = 1.0f;
+    bool loopActive = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlayerGUI)
 };
